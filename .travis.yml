@@ -8,7 +8,7 @@ go:
 script:
   - go get -d -t ./...
   - go vet ./...
-  - go test ./...
+  - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
   - >
     go_version=$(go version);
     if [ ${go_version:13:4} = "1.12" ]; then
@@ -16,3 +16,5 @@ script:
       goimports -d -e ./ | grep '.*' && { echo; echo "Aborting due to non-empty goimports output."; exit 1; } || :;
     fi
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
